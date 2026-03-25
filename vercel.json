@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm --filter core build && cd packages/client && NODE_OPTIONS=--max-old-space-size=8192 npx vite build --outDir ../../dist",
+  "buildCommand": "bash build-vercel.sh",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --ignore-scripts",
   "framework": null
