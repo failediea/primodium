@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm build:contracts && pnpm --filter client build",
+  "outputDirectory": "packages/client/dist",
+  "installCommand": "pnpm install",
+  "framework": null
+}
