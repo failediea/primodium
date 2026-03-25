@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm --filter client build && cp -r packages/client/dist .",
+  "buildCommand": "pnpm --filter core build && cd packages/client && NODE_OPTIONS=--max-old-space-size=8192 npx vite build --outDir ../../dist",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --ignore-scripts",
   "framework": null
