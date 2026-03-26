@@ -1,10 +1,11 @@
 import { chunk } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { useAccount, useConnect } from "wagmi";
+import { Connector, useAccount, useConnect, useSwitchChain } from "wagmi";
 
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { targetChain } from "@/config/wagmiConfig";
 import { Landing } from "@/screens/Landing";
 
 const connectorIcons: Record<string, string> = {
@@ -14,14 +15,46 @@ const connectorIcons: Record<string, string> = {
 };
 
 export const Connect: React.FC = React.memo(() => {
-  const { connector, isConnected } = useAccount();
+  const { connector, isConnected, chainId } = useAccount();
   const { connect, connectors, error, isPending } = useConnect();
+  const { switchChain } = useSwitchChain();
   const { noExternalAccount, setNoExternalAccount } = usePersistentStore();
   const [showingToast, setShowingToast] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
+
+  // Auto-switch to the target chain when connected on the wrong network
+  useEffect(() => {
+    if (isConnected && chainId && chainId !== targetChain.id) {
+      setIsSwitching(true);
+      toast.info(`Switching to ${targetChain.name}...`);
+      switchChain(
+        { chainId: targetChain.id },
+        {
+          onSuccess: () => {
+            setIsSwitching(false);
+            toast.success(`Connected to ${targetChain.name}`);
+          },
+          onError: (err) => {
+            setIsSwitching(false);
+            toast.error(`Please switch to ${targetChain.name} (Chain ID: ${targetChain.id}) in your wallet manually.`);
+            console.error("[Chain Switch]", err);
+          },
+        },
+      );
+    }
+  }, [isConnected, chainId, switchChain]);
 
   useEffect(() => {
     if (error) toast.warn(error.message);
   }, [error]);
+
+  const handleConnect = useCallback(
+    (connector: Connector) => {
+      if (isPending || isSwitching) return;
+      connect({ connector });
+    },
+    [connect, isPending, isSwitching],
+  );
 
   const confirmToast = async () => {
     toast.dismiss();
@@ -90,8 +123,8 @@ export const Connect: React.FC = React.memo(() => {
               <button
                 className="flex-1 items-center justify-center btn btn-secondary star-background join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
                 key={`${x.id}-${x.name}`}
-                onClick={() => !isPending && connect({ connector: x })}
-                disabled={isPending}
+                onClick={() => handleConnect(x)}
+                disabled={isPending || isSwitching}
               >
                 <div className="flex w-full items-center justify-center gap-2">
                   {connectorIcons[x.name] && <img src={connectorIcons[x.name]} className="w-6 h-6" />}

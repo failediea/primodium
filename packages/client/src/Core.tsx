@@ -13,6 +13,7 @@ import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStor
 import AppLoadingState from "@/AppLoadingState";
 import { Initializing } from "@/components/shared/Initializing";
 import { getCoreConfig } from "@/config/getCoreConfig";
+import { targetChain } from "@/config/wagmiConfig";
 import { Maintenance } from "@/screens/Maintenance";
 
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
@@ -45,6 +46,9 @@ function Core() {
   if (MAINTENANCE) return <Maintenance />;
 
   if (!noExternalAccount && !externalAccount.isConnected) return null;
+
+  // Don't initialize core until wallet is on the correct chain
+  if (!noExternalAccount && externalAccount.chainId !== targetChain.id) return null;
   if (!core) return <Initializing />;
 
   return (
