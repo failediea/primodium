@@ -1,7 +1,7 @@
 {
   "installCommand": "pnpm install --ignore-scripts",
-  "buildCommand": "pnpm --filter client build && cp -r packages/client/dist ./dist",
-  "outputDirectory": "dist",
+  "buildCommand": "pnpm --filter client build",
+  "outputDirectory": "packages/client/dist",
   "framework": null,
   "rewrites": [
     { "source": "/api/drip", "destination": "/api/drip" }
