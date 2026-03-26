@@ -1,6 +1,6 @@
 {
   "installCommand": "pnpm install --ignore-scripts",
-  "buildCommand": "bash build-vercel.sh",
+  "buildCommand": "pnpm --filter client build && cp -r packages/client/dist ./dist",
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
