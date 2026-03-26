@@ -1,6 +1,9 @@
 {
+  "installCommand": "pnpm install --ignore-scripts",
   "buildCommand": "bash build-vercel.sh",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --ignore-scripts",
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/drip", "destination": "/api/drip" }
+  ]
 }
