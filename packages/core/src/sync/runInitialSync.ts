@@ -21,11 +21,11 @@ export const runInitialSync = async (core: Core) => {
     // process logs that came in the meantime
     processPendingLogs?.();
 
+    // set sync status to live BEFORE triggering update stream, so shouldSkipUpdateStream returns false
+    tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
+
     // trigger update stream for all entities in all components (to update UI on hooks and watchers)
     triggerUpdateStream();
-
-    // set sync status to live so it processed incoming blocks immediately
-    tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
   };
 
   if (!config.chain.indexerUrl) {
