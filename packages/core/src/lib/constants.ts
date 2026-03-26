@@ -7,7 +7,7 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { toHex32 } from "@/utils/global/encode";
 
 /** Minimum eth required to get drip */
-export const minEth = parseEther("0.0049");
+export const minEth = parseEther("0.001");
 
 /** Resource id of unlimited delegation system */
 export const UNLIMITED_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
