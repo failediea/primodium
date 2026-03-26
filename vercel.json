@@ -1,6 +1,6 @@
 {
   "installCommand": "pnpm install --ignore-scripts",
-  "buildCommand": "pnpm --filter core build && cd packages/client && node --max-old-space-size=8192 node_modules/vite/bin/vite.js build --outDir ../../dist",
+  "buildCommand": "bash -c 'REPO_ROOT=$(pwd) && pnpm --filter core build && cd $REPO_ROOT/packages/client && node --max-old-space-size=8192 node_modules/vite/bin/vite.js build --outDir $REPO_ROOT/dist'",
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
